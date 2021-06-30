@@ -1,12 +1,26 @@
 from os import close
+from tkinter import filedialog as fd
 from tkinter import *
+from warnings import catch_warnings
+
+from tensorflow.python.keras.backend import cast_variables_to_tensor
+from tensorflow.python.summary.summary import image
 import new_skript
+from PIL import ImageTk, Image
+import cv2
 
 def selectImg():
-    print("select")
+    file = fd.askopenfilename(filetypes=[('all files','*')])
+    filetoprocess = Image.open(file)
+    newImg = ImageTk.PhotoImage(filetoprocess)
+    
+    l.configure(image=newImg)
+    l.image = newImg
+
+    
 
 def startRec():
-    print("start")
+    prediction = new_skript.predict2()
 
 def exitPrg():
     window.destroy()
@@ -14,19 +28,25 @@ def exitPrg():
 
 window = Tk()
 window.title('MNIST Number Recognition')
-window.configure(background='white')
+window.geometry("700x400")
+window.configure(background='grey')
 
-# label
-Label(window, text='Handwritten Number Recognition', font='none 12 bold').grid(row=0, column=3)
+Label(window, text='Handwritten Number Recognition', font='none 12 bold').pack() #.grid(row=0, column=3)
 
-selectButton = Button(window, text = 'Select your Image', command = selectImg)
-selectButton.grid(row = 1, column = 0)
+selectButton = Button(window, text = 'Select your Image', command = selectImg) #.grid(row = 1, column = 0)
+selectButton.pack()
 
-startButton = Button(window, text = 'Start Recognition', command = startRec)
-startButton.grid(row = 1, column = 3)
+startButton = Button(window, text = 'Start Recognition', command = startRec)#.grid(row = 1, column = 3)
+startButton.pack()
 
-exitButton = Button(window, text = 'Close Programm', command = exitPrg)
-exitButton.grid(row = 10, column = 4)
+img = ImageTk.PhotoImage(Image.open("img_1021.jpg"))  
+l=Label(image=img)
+l.pack()
 
+predictionLabel = Label(window, text= 'Prediction: ' )#.grid(row=4, column=3)
+predictionLabel.pack()
+
+exitButton = Button(window, text = 'Close Programm', command = exitPrg)#.grid(row = 10, column = 4)
+exitButton. pack()
 #### run the mainloop
 window.mainloop()
