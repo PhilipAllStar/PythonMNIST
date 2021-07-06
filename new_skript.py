@@ -26,35 +26,24 @@ def train():
 
 def printLossNAcc():
     model = load_model('Mnist')
-    # calculate validation loss and accuarcy
-    val_loss, val_acc = model.evaluate(x_test, y_test)
-    print(val_loss, val_acc)
 
-def predict(testImg):
-    model = load_model('Mnist')
-    predictions = model.predict([testImg])
-
-    #print the highest propability
-    import numpy as np
-    print(np.argmax(predictions[0]))
-
-
-
-
-
-
-
-def predict2():
-    model = load_model('Mnist')
-    
     mnist = tf.keras.datasets.mnist
+
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
     #nomalize data
     x_train = tf.keras.utils.normalize(x_train, axis=1)
     x_test = tf.keras.utils.normalize(x_test, axis=1)
 
-    predictions = model.predict([x_test])
+    # calculate validation loss and accuarcy
+    val_loss, val_acc = model.evaluate(x_test, y_test)
+    print(val_loss, val_acc)
 
-    #print the highest propability
+def predict(testImg):
     import numpy as np
-    print(np.argmax(predictions[0]))
+    model = load_model('Mnist')
+    img = testImg.convert('L').resize((28,28), Image.ANTIALIAS)
+    img = np.array(img)
+    img = img.astype('float32')
+    img /= 255
+    predictions = model.predict(img[None,:,:])
+    return predictions[0]
